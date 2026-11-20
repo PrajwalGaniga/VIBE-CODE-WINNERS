@@ -1,74 +1,65 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * AudioPlayer — Subtle background ambient music player.
  *
- * Requirements:
- *  - Default ON: music plays continuously at low volume (0.22)
- *  - If browser autoplay policy blocks unmuted audio on load, starts automatically
- *    on the very first interaction (click, tap, keypress, scroll)
- *  - Floating sound toggle button (bottom-right) lets the user turn it off if they want
+ * Synchronized with #bgm preloaded audio element in index.html.
+ * Plays immediately on load (or on first user gesture) at volume 0.22.
+ * The toggle button accurately reflects whether audio is actually playing.
  */
 export function AudioPlayer() {
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true); // Default ON
-  const userMutedRef = useRef(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    const audio = new Audio('/assets/bgm.mpeg');
+    const audio = document.getElementById('bgm') || new Audio('/assets/bgm.mpeg');
+    audio.volume = 0.22;
     audio.loop = true;
-    audio.volume = 0.22; // Gentle background volume
-    audioRef.current = audio;
 
-    // Aggressively attempt to play on mount (default ON)
-    const startAudio = () => {
-      if (userMutedRef.current || !audioRef.current) return;
-      audioRef.current.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          // Autoplay blocked pending user gesture
-        });
-    };
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
 
-    startAudio();
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
 
-    // Unlock and play on very first user gesture anywhere
-    const onUserGesture = () => {
-      if (userMutedRef.current) return;
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.play()
-          .then(() => setIsPlaying(true))
-          .catch(() => {});
+    // Initial check: if already playing from index.html script
+    if (!audio.paused) {
+      setIsPlaying(true);
+    } else {
+      // Attempt immediate play
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+
+    // In case browser policy blocked until first gesture, unlock on any interaction
+    const unlockOnGesture = () => {
+      if (audio.dataset?.userMuted === 'true') return;
+      if (audio.paused) {
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
       }
-      window.removeEventListener('click', onUserGesture);
-      window.removeEventListener('touchstart', onUserGesture);
-      window.removeEventListener('pointerdown', onUserGesture);
-      window.removeEventListener('keydown', onUserGesture);
     };
 
-    window.addEventListener('click', onUserGesture, { passive: true });
-    window.addEventListener('touchstart', onUserGesture, { passive: true });
-    window.addEventListener('pointerdown', onUserGesture, { passive: true });
-    window.addEventListener('keydown', onUserGesture, { passive: true });
+    const events = ['pointerdown', 'touchstart', 'mousedown', 'keydown', 'scroll', 'click'];
+    events.forEach((evt) => {
+      window.addEventListener(evt, unlockOnGesture, { passive: true, once: true });
+    });
 
     return () => {
-      audio.pause();
-      audio.src = '';
-      window.removeEventListener('click', onUserGesture);
-      window.removeEventListener('touchstart', onUserGesture);
-      window.removeEventListener('pointerdown', onUserGesture);
-      window.removeEventListener('keydown', onUserGesture);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
+      events.forEach((evt) => {
+        window.removeEventListener(evt, unlockOnGesture);
+      });
     };
   }, []);
 
   const toggleSound = () => {
-    const audio = audioRef.current;
+    const audio = document.getElementById('bgm');
     if (!audio) return;
+
     if (audio.paused) {
-      userMutedRef.current = false;
+      if (audio.dataset) audio.dataset.userMuted = 'false';
       audio.play().then(() => setIsPlaying(true)).catch(() => {});
     } else {
-      userMutedRef.current = true;
+      if (audio.dataset) audio.dataset.userMuted = 'true';
       audio.pause();
       setIsPlaying(false);
     }

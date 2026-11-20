@@ -13,6 +13,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-[#030509] text-white">
+    <audio id="bgm" src="/assets/bgm.mpeg" loop preload="auto"></audio>
+    <script>
+      (function() {
+        var bgm = document.getElementById('bgm');
+        if (!bgm) return;
+        bgm.volume = 0.22;
+        var startBgm = function() {
+          if (bgm.dataset.userMuted === 'true') return;
+          bgm.play().catch(function() {});
+        };
+        startBgm();
+        ['pointerdown', 'touchstart', 'mousedown', 'keydown', 'scroll', 'click'].forEach(function(evt) {
+          window.addEventListener(evt, startBgm, { once: true, passive: true });
+        });
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
