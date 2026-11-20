@@ -10,10 +10,10 @@ import { AudioPlayer }        from './components/AudioPlayer';
 import { eventConfig }        from './data/eventConfig';
 
 export function App() {
-  const targetTimestamp       = new Date(eventConfig.deadline).getTime();
-  const isInitiallyPastDeadline = Date.now() >= targetTimestamp;
+  const targetTimestamp = new Date(eventConfig.deadline).getTime();
 
-  const [stage, setStage]                 = useState(() => isInitiallyPastDeadline ? 'D' : 'A');
+  // Always start with the cinematic intro storyline (Stage A)
+  const [stage, setStage]                 = useState('A');
   const [isSpotlightActive, setSpotlight] = useState(false);
   const [isDimmed, setDimmed]             = useState(false);
 
