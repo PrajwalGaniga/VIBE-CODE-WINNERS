@@ -335,12 +335,12 @@ export function WinnerReveal({ onComplete, onTop1Active }) {
             className="font-bebas leading-none block"
           />
 
-          {/* NAMES — staggered letter-by-letter */}
-          <div className="space-y-3">
-            {/* Student 1 */}
+          {/* NAMES — identical prominent size for both Person 1 and Person 2 */}
+          <div className="space-y-4">
+            {/* Person 1 */}
             <div>
               <p className="font-heading text-[11px] tracking-[0.24em] text-white/40 uppercase mb-1.5">
-                {currentStep.rank} · STUDENT 1
+                {currentStep.rank} · WINNER 1
               </p>
               <LetterByLetter
                 tag="h3"
@@ -350,7 +350,7 @@ export function WinnerReveal({ onComplete, onTop1Active }) {
                 charDelay={isTop1 ? 70 : 54}
                 className="font-display font-extrabold uppercase leading-none tracking-tight text-white block"
                 style={{
-                  fontSize: 'clamp(1.8rem, 6vw, 4.6rem)',
+                  fontSize: 'clamp(2rem, 6.5vw, 4.8rem)',
                   textShadow: isTop1 ? '0 0 45px rgba(255,255,255,0.22)' : 'none',
                 }}
               />
@@ -362,25 +362,24 @@ export function WinnerReveal({ onComplete, onTop1Active }) {
               style={{ background: `${currentStep.badgeColor}40` }}
             />
 
-            {/* Student 2 */}
+            {/* Person 2 — exact same font size and weight as Person 1 */}
             <div>
               <p
                 className="font-heading text-[11px] tracking-[0.24em] text-white/40 uppercase mb-1.5"
                 style={{ opacity: 0, animation: `settleUp 0.5s ease ${name2BaseDelay - 200}ms forwards` }}
               >
-                {currentStep.rank} · STUDENT 2
+                {currentStep.rank} · WINNER 2
               </p>
               <LetterByLetter
                 tag="h3"
                 text={currentStep.name2}
-                animClass={isTop1 ? 'anim-winner-name' : 'anim-letter-rise'}
+                animClass={isTop1 ? 'anim-winner-name' : 'anim-phrase-in'}
                 baseDelay={name2BaseDelay}
-                charDelay={isTop1 ? 65 : 48}
-                className="font-display font-extrabold uppercase leading-none tracking-tight block"
+                charDelay={isTop1 ? 70 : 54}
+                className="font-display font-extrabold uppercase leading-none tracking-tight text-white block"
                 style={{
-                  fontSize: 'clamp(1.8rem, 6vw, 4.6rem)',
-                  color: isTop1 ? '#f0dfa8' : '#d8e5ff',
-                  textShadow: isTop1 ? '0 0 40px rgba(240,223,168,0.3)' : 'none',
+                  fontSize: 'clamp(2rem, 6.5vw, 4.8rem)',
+                  textShadow: isTop1 ? '0 0 45px rgba(255,255,255,0.22)' : 'none',
                 }}
               />
             </div>

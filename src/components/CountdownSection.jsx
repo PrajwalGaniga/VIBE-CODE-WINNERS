@@ -31,7 +31,7 @@ function AnimatedDigit({ value }) {
   );
 }
 
-export function CountdownSection({ onDeadlineHit, onForceReveal }) {
+export function CountdownSection({ onDeadlineHit }) {
   const { formattedHours, formattedMinutes, formattedSeconds, hours, minutes, isPastDeadline } =
     useCountdown(eventConfig.deadline, onDeadlineHit);
 
@@ -104,22 +104,8 @@ export function CountdownSection({ onDeadlineHit, onForceReveal }) {
           </p>
         </div>
 
-        {/* Reveal button for testing preview */}
-        {onForceReveal && (
-          <div className="anim-settle-up pt-1" style={{ animationDelay: '700ms', opacity: 0 }}>
-            <button
-              type="button"
-              onClick={onForceReveal}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-[#709be0]/20 border border-white/15 hover:border-[#709be0]/40 text-[#709be0] hover:text-white text-xs font-heading font-semibold tracking-wider uppercase transition-all shadow-lg hover:shadow-[0_0_20px_rgba(112,155,224,0.3)]"
-            >
-              <span>Begin Reveal Now</span>
-              <span>→</span>
-            </button>
-          </div>
-        )}
-
         {/* Orbital ring — desktop only */}
-        <div className="hidden lg:block anim-settle-up" style={{ animationDelay: '800ms', opacity: 0 }} aria-hidden="true">
+        <div className="hidden lg:block anim-settle-up" style={{ animationDelay: '700ms', opacity: 0 }} aria-hidden="true">
           <div className="relative w-44 h-44 opacity-25 mt-4">
             <div className="absolute inset-0 rounded-full border border-dashed border-white/25" style={{ animation: 'orbitRing 70s linear infinite' }} />
             <div className="absolute inset-5 rounded-full border border-[#709be0]/20" style={{ animation: 'orbitRing 45s linear infinite reverse' }} />

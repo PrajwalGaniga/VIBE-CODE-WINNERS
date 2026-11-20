@@ -85,7 +85,6 @@ export function App() {
         {stage === 'C' && (
           <CountdownSection
             onDeadlineHit={() => navigate('D')}
-            onForceReveal={() => navigate('D')}
           />
         )}
 

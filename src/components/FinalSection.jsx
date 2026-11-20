@@ -112,13 +112,13 @@ export function FinalSection({ onReplay }) {
               </span>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <h4 className="font-display text-lg sm:text-xl font-extrabold uppercase text-white tracking-tight">
                 {w.name1}
               </h4>
-              <p className="font-display text-base sm:text-lg font-bold uppercase tracking-tight" style={{ color: w.rankNum === 1 ? '#f0dfa8' : '#d8e5ff' }}>
+              <h4 className="font-display text-lg sm:text-xl font-extrabold uppercase text-white tracking-tight">
                 {w.name2}
-              </p>
+              </h4>
             </div>
           </div>
         ))}

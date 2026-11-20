@@ -4,55 +4,60 @@ import React, { useState, useEffect, useRef } from 'react';
  * AudioPlayer — Subtle background ambient music player.
  *
  * Requirements:
- *  - Plays /assets/bgm.mpeg on loop
- *  - Keeps low volume (0.22)
- *  - Handles browser autoplay policy by starting on first user interaction
- *  - Floating sound toggle button (bottom-right, inspired by cinematic landing pages)
+ *  - Default ON: music plays continuously at low volume (0.22)
+ *  - If browser autoplay policy blocks unmuted audio on load, starts automatically
+ *    on the very first interaction (click, tap, keypress, scroll)
+ *  - Floating sound toggle button (bottom-right) lets the user turn it off if they want
  */
 export function AudioPlayer() {
   const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Default ON
+  const userMutedRef = useRef(false);
 
   useEffect(() => {
     const audio = new Audio('/assets/bgm.mpeg');
     audio.loop = true;
-    audio.volume = 0.22; // Low background volume
+    audio.volume = 0.22; // Gentle background volume
     audioRef.current = audio;
 
-    // Attempt autoplay if permitted
-    audio.play()
-      .then(() => setIsPlaying(true))
-      .catch(() => {
-        // Autoplay blocked by browser policy — will start on user interaction
-        setIsPlaying(false);
-      });
-
-    // Start playback on first click/touch anywhere on page
-    const handleFirstInteraction = () => {
-      if (audioRef.current && audioRef.current.paused) {
-        audioRef.current.play()
-          .then(() => {
-            setIsPlaying(true);
-            setHasInteracted(true);
-          })
-          .catch(() => {});
-      }
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
+    // Aggressively attempt to play on mount (default ON)
+    const startAudio = () => {
+      if (userMutedRef.current || !audioRef.current) return;
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {
+          // Autoplay blocked pending user gesture
+        });
     };
 
-    window.addEventListener('click', handleFirstInteraction, { once: true });
-    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
-    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+    startAudio();
+
+    // Unlock and play on very first user gesture anywhere
+    const onUserGesture = () => {
+      if (userMutedRef.current) return;
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
+      }
+      window.removeEventListener('click', onUserGesture);
+      window.removeEventListener('touchstart', onUserGesture);
+      window.removeEventListener('pointerdown', onUserGesture);
+      window.removeEventListener('keydown', onUserGesture);
+    };
+
+    window.addEventListener('click', onUserGesture, { passive: true });
+    window.addEventListener('touchstart', onUserGesture, { passive: true });
+    window.addEventListener('pointerdown', onUserGesture, { passive: true });
+    window.addEventListener('keydown', onUserGesture, { passive: true });
 
     return () => {
       audio.pause();
       audio.src = '';
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
+      window.removeEventListener('click', onUserGesture);
+      window.removeEventListener('touchstart', onUserGesture);
+      window.removeEventListener('pointerdown', onUserGesture);
+      window.removeEventListener('keydown', onUserGesture);
     };
   }, []);
 
@@ -60,8 +65,10 @@ export function AudioPlayer() {
     const audio = audioRef.current;
     if (!audio) return;
     if (audio.paused) {
+      userMutedRef.current = false;
       audio.play().then(() => setIsPlaying(true)).catch(() => {});
     } else {
+      userMutedRef.current = true;
       audio.pause();
       setIsPlaying(false);
     }
@@ -73,19 +80,19 @@ export function AudioPlayer() {
         type="button"
         onClick={toggleSound}
         aria-label={isPlaying ? 'Mute background audio' : 'Play background audio'}
-        title={isPlaying ? 'Audio playing (Click to mute)' : 'Click to enable sound'}
+        title={isPlaying ? 'Music is ON (Click to turn off)' : 'Music is OFF (Click to turn on)'}
         className="group relative flex items-center gap-2 px-3 py-2 rounded-full backdrop-blur-xl border border-white/15 bg-white/[0.08] hover:bg-white/[0.18] text-white/75 hover:text-white transition-all shadow-[0_8px_24px_rgba(0,0,0,0.5)] active:scale-95"
       >
         {isPlaying ? (
           <>
-            {/* Playing equalizer animation */}
+            {/* Equalizer animation */}
             <span className="flex items-end gap-[2px] h-3.5 w-3.5" aria-hidden="true">
               <span className="w-[2px] h-full bg-[#709be0] rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" />
               <span className="w-[2px] h-2/3 bg-[#709be0] rounded-full animate-[pulse_0.9s_ease-in-out_infinite]" />
               <span className="w-[2px] h-4/5 bg-[#709be0] rounded-full animate-[pulse_0.75s_ease-in-out_infinite]" />
             </span>
-            <span className="font-heading text-[10px] tracking-widest uppercase text-white/70">
-              AUDIO ON
+            <span className="font-heading text-[10px] tracking-widest uppercase text-white/80">
+              MUSIC ON
             </span>
           </>
         ) : (
@@ -96,7 +103,7 @@ export function AudioPlayer() {
               <line x1="17" y1="9" x2="23" y2="15" />
             </svg>
             <span className="font-heading text-[10px] tracking-widest uppercase text-white/50">
-              AUDIO OFF
+              MUSIC OFF
             </span>
           </>
         )}
