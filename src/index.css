@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply bg-[#030509] text-white overflow-x-hidden antialiased;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  * { box-sizing: border-box; }
+}
+
+/* ============================================================
+   LETTER-BY-LETTER CINEMATIC ANIMATIONS
+   ============================================================ */
+
+@keyframes letterPop {
+  0%   { opacity: 0; transform: perspective(400px) translateZ(-60px) scale(0.7); filter: blur(4px); }
+  60%  { opacity: 1; transform: perspective(400px) translateZ(8px) scale(1.06); filter: blur(0); }
+  100% { opacity: 1; transform: perspective(400px) translateZ(0) scale(1); filter: blur(0); }
+}
+
+@keyframes letterRise {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.9); filter: blur(3px); }
+  70%  { opacity: 1; transform: translateY(-3px) scale(1.02); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes phraseIn {
+  0%   { opacity: 0; transform: perspective(600px) translateZ(-120px) scale(0.6); filter: blur(8px); }
+  65%  { opacity: 1; transform: perspective(600px) translateZ(12px) scale(1.04); filter: blur(0); }
+  100% { opacity: 1; transform: perspective(600px) translateZ(0) scale(1); filter: blur(0); }
+}
+
+@keyframes settleUp {
+  0%   { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes digitFlip {
+  0%   { opacity: 0; transform: translateY(-20px) scaleY(1.2); }
+  50%  { opacity: 1; transform: translateY(2px) scaleY(0.97); }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@keyframes spotlightBloom {
+  0%   { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes winnerNameIn {
+  0%   { opacity: 0; transform: perspective(800px) translateZ(-200px) scale(0.4); filter: blur(12px); }
+  60%  { opacity: 1; transform: perspective(800px) translateZ(16px) scale(1.05); filter: blur(0); }
+  100% { opacity: 1; transform: perspective(800px) translateZ(0) scale(1); filter: blur(0); }
+}
+
+@keyframes cameraPushIn {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.06); }
+}
+
+/* ============================================================
+   ASTRONAUT — 3D CINEMATIC JOURNEY & HERO ANIMATIONS
+   ============================================================ */
+
+/* Phase 1: Rise from bottom of screen upward toward moon with 3D angle */
+@keyframes astronaut3DRise {
+  0% {
+    transform: translateY(85vh) rotateX(12deg) rotateY(-18deg) rotateZ(-6deg) scale(0.85);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Phase 2: Settled 3D floating hero loop near the moon */
+@keyframes astronaut3DFloat {
+  0% {
+    transform: translateY(0px) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg);
+  }
+  25% {
+    transform: translateY(-16px) rotateX(10deg) rotateY(-6deg) rotateZ(1deg);
+  }
+  50% {
+    transform: translateY(-6px) rotateX(4deg) rotateY(-14deg) rotateZ(-4deg);
+  }
+  75% {
+    transform: translateY(-20px) rotateX(8deg) rotateY(-8deg) rotateZ(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg);
+  }
+}
+
+/* Backward compatibility aliases */
+@keyframes astronautRise {
+  0%   { transform: translateY(85vh) rotateX(12deg) rotateY(-18deg) rotateZ(-6deg) scale(0.85); opacity: 0; }
+  5%   { opacity: 1; }
+  100% { transform: translateY(0) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg) scale(1); opacity: 1; }
+}
+
+@keyframes astronautFloat {
+  0%   { transform: translateY(0px) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg); }
+  33%  { transform: translateY(-16px) rotateX(9deg) rotateY(-7deg) rotateZ(1deg); }
+  66%  { transform: translateY(-8px) rotateX(4deg) rotateY(-13deg) rotateZ(-3deg); }
+  100% { transform: translateY(0px) rotateX(6deg) rotateY(-10deg) rotateZ(-2deg); }
+}
+
+/* Visor shine flicker */
+@keyframes visorShine {
+  0%, 82%, 100% { opacity: 0; }
+  86%           { opacity: 0.65; }
+  90%           { opacity: 0.25; }
+  94%           { opacity: 0.75; }
+}
+
+/* Planet slow drift */
+@keyframes planetDrift {
+  0%   { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-22px) rotate(6deg); }
+}
+
+/* Moon gentle breathe */
+@keyframes moonDrift {
+  0%   { transform: translateY(0px) scale(1); }
+  33%  { transform: translateY(-18px) scale(1.012); }
+  66%  { transform: translateY(8px) scale(0.996); }
+  100% { transform: translateY(-6px) scale(1.004); }
+}
+
+/* Orbital ring */
+@keyframes orbitRing {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Stage entrance */
+@keyframes stageEnter {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+.anim-letter-pop  { animation: letterPop  0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-letter-rise { animation: letterRise 0.5s  cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-phrase-in   { animation: phraseIn   0.8s  cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-settle-up   { animation: settleUp   0.75s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-stage-enter { animation: stageEnter 0.75s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-winner-name { animation: winnerNameIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-spotlight   { animation: spotlightBloom 1.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.moon-float   { animation: moonDrift    32s ease-in-out infinite; }
+.planet-drift { animation: planetDrift  55s ease-in-out infinite alternate; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
